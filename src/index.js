@@ -32,9 +32,24 @@ const asyncIncrementor = () => {
         return incrementor2;
     }();
 };
+const createIncrementer = () => {
+    return {
+        [Symbol.iterator]() {
+            return this;
+        },
+        next() {
+            if (!this.current) {
+                this.current = 1;
+            }
+            return {
+                done: false,
+                value: this.current++
+            }
+        }
+    }
+};
 
 {
-    const createIncrementer = () => { };
     // return same argument not earlier than in one second, and not later, than in two
     const returnBackInSecond = () => { };
     const getDeepPropertiesCount = () => { };
@@ -43,14 +58,13 @@ const asyncIncrementor = () => {
     const sortByProto = () => { };
 }
 
+
 exports.createEnumerableProperty = createEnumerableProperty;
 exports.createNotEnumerableProperty = createNotEnumerableProperty;
 exports.createProtoMagicObject = createProtoMagicObject;
 exports.incrementor = incrementor;
 exports.asyncIncrementor = asyncIncrementor;
-
-
-// exports.createIncrementer = createIncrementer;
+exports.createIncrementer = createIncrementer;
 
 // return same argument not earlier than in one second, and not later, than in two
 // exports.returnBackInSecond = returnBackInSecond;
