@@ -6,6 +6,7 @@ const createEnumerableProperty = (propertyName) => {
 const createNotEnumerableProperty = (propertyName) => {
     return Symbol(propertyName);
 };
+
 const createProtoMagicObject = () => {
     function User() {
         return new Function();
@@ -14,6 +15,7 @@ const createProtoMagicObject = () => {
     func.__proto__ = func.prototype;
     return func;
 };
+
 const incrementor = () => {
     this.i = this.i === undefined ? 1 : ++this.i;
     let self = this;
@@ -22,6 +24,7 @@ const incrementor = () => {
     }
     return incrementor;
 };
+
 const asyncIncrementor = () => {
     return function incrementor2() {
         this.j = this.j === undefined ? 1 : ++this.j;
@@ -32,6 +35,7 @@ const asyncIncrementor = () => {
         return incrementor2;
     }();
 };
+
 const createIncrementer = () => {
     return {
         [Symbol.iterator]() {
@@ -48,6 +52,7 @@ const createIncrementer = () => {
         }
     }
 };
+
 // return same argument not earlier than in one second, and not later, than in two
 const returnBackInSecond = (param) => {
     let promise = new Promise((resolve, reject) => {
@@ -57,6 +62,7 @@ const returnBackInSecond = (param) => {
     })
     return promise;
 };
+
 const getDeepPropertiesCount = (obj) => {
     let temp = obj;
     let arr = [];
@@ -74,11 +80,41 @@ const getDeepPropertiesCount = (obj) => {
     return arr.length;
 };
 
-{
-    const createSerializedObject = () => { };
-    const toBuffer = () => { };
-    const sortByProto = () => { };
-}
+const createSerializedObject = () => {
+    let obj = {
+        toJSON: function() {
+            return true;
+        },
+        toString: function() {
+            return true;
+        }
+    }
+    return obj;
+};
+
+const sortByProto = (array) => {
+    let arrOfObjects = []
+    for (let i = 0; i < array.length; i++) {
+        let temp = array[i];
+        let count = 0;
+        while (temp.__proto__ != Object.prototype) {
+            count++;
+            temp = temp.__proto__;
+        }
+        let obj = {
+            value: array[i],
+            count: count
+        }
+        arrOfObjects.push(obj);
+    }
+    arrOfObjects = arrOfObjects.sort((a, b) => {
+        return b.count - a.count;
+    })
+    for (let i = 0; i < arrOfObjects.length; i++) {
+        array[i] = arrOfObjects[i].value
+    }
+    return array;
+};
 
 exports.createEnumerableProperty = createEnumerableProperty;
 exports.createNotEnumerableProperty = createNotEnumerableProperty;
@@ -89,6 +125,5 @@ exports.createIncrementer = createIncrementer;
 // return same argument not earlier than in one second, and not later, than in two
 exports.returnBackInSecond = returnBackInSecond;
 exports.getDeepPropertiesCount = getDeepPropertiesCount;
-
-// exports.createSerializedObject = createSerializedObject;
-// exports.sortByProto = sortByProto;
+exports.createSerializedObject = createSerializedObject;
+exports.sortByProto = sortByProto;
