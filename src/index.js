@@ -48,16 +48,37 @@ const createIncrementer = () => {
         }
     }
 };
+// return same argument not earlier than in one second, and not later, than in two
+const returnBackInSecond = (param) => {
+    let promise = new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve(param);
+        }, 1200)
+    })
+    return promise;
+};
+const getDeepPropertiesCount = (obj) => {
+    let temp = obj;
+    let arr = [];
+    for (let i = 0; ; ) {
+        i = +Object.keys(temp)[0];
+        if (Object.keys(temp[i])) {
+            arr = arr.concat(Object.keys(temp));
+            arr = arr.concat(Object.keys(temp[i]));
+        }
+        temp = temp[i][i];
+        if (!Object.keys(temp).length) {
+            break;
+        }
+    }
+    return arr.length;
+};
 
 {
-    // return same argument not earlier than in one second, and not later, than in two
-    const returnBackInSecond = () => { };
-    const getDeepPropertiesCount = () => { };
     const createSerializedObject = () => { };
     const toBuffer = () => { };
     const sortByProto = () => { };
 }
-
 
 exports.createEnumerableProperty = createEnumerableProperty;
 exports.createNotEnumerableProperty = createNotEnumerableProperty;
@@ -65,9 +86,9 @@ exports.createProtoMagicObject = createProtoMagicObject;
 exports.incrementor = incrementor;
 exports.asyncIncrementor = asyncIncrementor;
 exports.createIncrementer = createIncrementer;
-
 // return same argument not earlier than in one second, and not later, than in two
-// exports.returnBackInSecond = returnBackInSecond;
-// exports.getDeepPropertiesCount = getDeepPropertiesCount;
+exports.returnBackInSecond = returnBackInSecond;
+exports.getDeepPropertiesCount = getDeepPropertiesCount;
+
 // exports.createSerializedObject = createSerializedObject;
 // exports.sortByProto = sortByProto;
